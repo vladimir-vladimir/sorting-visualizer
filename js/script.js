@@ -80,7 +80,6 @@ function bubbleSortStep(array) {
         i++;
     }
     if (i==array.length-1) {
-        console.log("finished");
         return;
     }
     if (array[j] > array[j+1]) {
@@ -97,7 +96,6 @@ function bubbleSort(array) {
     timer = setTimeout(() => {bubbleSort(array);}, timeBetweenSteps);
     if (i==array.length-1) {
         clearTimeout(timer);
-        console.log("timeout cleared");
     }
 }
 
@@ -118,10 +116,8 @@ function merge(array, left, right) {
 function mergeSort(array, left, right) {
     merge(array, left, right);
     timer = setTimeout(() => {mergeSort(array, left, right);}, timeBetweenSteps);
-    console.log(l + " " + step);
     if (step > right-left) {
         clearTimeout(timer);
-        console.log("timeout cleared");
     }
 }
 
