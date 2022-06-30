@@ -1,5 +1,5 @@
 # sorting-visualizer
-Sorting Visualizer implemented in HTML/CSS/Javascript. Currently only Bubble Sort implemented.
+Sorting Visualizer implemented in HTML/CSS/Javascript.
 
 Hosted at: https://vladimir-vladimir.github.io/sorting-visualizer/
 
