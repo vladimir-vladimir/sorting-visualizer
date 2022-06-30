@@ -3,4 +3,4 @@ Sorting Visualizer implemented in HTML/CSS/Javascript. Currently only Bubble Sor
 
 Hosted at: https://vladimir-vladimir.github.io/sorting-visualizer/
 
-Note: Logic for Bubble Sort fully implemented. Will add Merge Sort in near future. Will make it look prettier in the future.
+Note: Logic for Bubble Sort fully implemented. Merge Sort works, but needs improvement. Will make it look prettier in the future.
