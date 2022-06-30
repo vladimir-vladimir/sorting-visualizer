@@ -1,19 +1,42 @@
 const COUNT = 100;
 const sortingVisualizer = document.querySelector("#sorting-visualizer");
 const numbers = Array.from({length: COUNT}, (_, i) => i + 1);
-let timeBetweenSteps = 10, i, j;
+let timeBetweenSteps = 200, i, j, l, step;
+let startPressed = false;
 
 shuffleArray(numbers);
 drawAllRectangles(numbers);
 
-const stepButton = document.createElement("button");
-stepButton.innerText = "Bubble Sort";
-stepButton.addEventListener("click", () => {
+const bubbleSortButton = document.createElement("button");
+bubbleSortButton.innerText = "Bubble Sort";
+bubbleSortButton.addEventListener("click", () => {
+    if (startPressed) {
+        return;
+    }
+    startPressed = true;
     i=0, j=0;
     bubbleSort(numbers);
-
 });
-document.getElementById("buttons").append(stepButton);
+document.getElementById("buttons").append(bubbleSortButton);
+
+const mergeSortButton = document.createElement("button");
+mergeSortButton.innerText = "Merge Sort";
+mergeSortButton.addEventListener("click", () => {
+    if (startPressed) {
+        return;
+    }
+    startPressed = true;
+    step=1, l=0;
+    mergeSort(numbers, 0, numbers.length-1);
+});
+document.getElementById("buttons").append(mergeSortButton);
+
+const refreshButton = document.createElement("button");
+refreshButton.innerText = "Refresh";
+refreshButton.addEventListener("click", () => {
+    location.reload();
+});
+document.getElementById("buttons").append(refreshButton);
 
 function createRectangle(value, maxValue, width, id, parentElement) {
     const rectangle = document.createElement("div");
@@ -51,19 +74,14 @@ function shuffleArray(array) {
     }
 }
 
-function delay(milliseconds) {
-    const date = Date.now();
-    while(Date.now() - date < milliseconds) {}
-}
-
-
 function bubbleSortStep(array) {
-    if (i==array.length-1) {
-        return;
-    }
     if (j==array.length-i-1) {
         j=0;
         i++;
+    }
+    if (i==array.length-1) {
+        console.log("finished");
+        return;
     }
     if (array[j] > array[j+1]) {
         swap(array, j, j+1);
@@ -79,8 +97,47 @@ function bubbleSort(array) {
     timer = setTimeout(() => {bubbleSort(array);}, timeBetweenSteps);
     if (i==array.length-1) {
         clearTimeout(timer);
+        console.log("timeout cleared");
     }
 }
 
+function merge(array, left, right) {
+    if (l >=right) {
+        l=left;
+        step*=2;
+    }
+    if (step>right-left) {
+        return;
+    }
+    let m = (l+step-1>right) ? right:l+step-1;
+    let r = (l+2*step-1>right) ? right:l+2*step-1;
+    mergeStep(array, l, m, r);  
+    l += 2*step;
+}
 
+function mergeSort(array, left, right) {
+    merge(array, left, right);
+    timer = setTimeout(() => {mergeSort(array, left, right);}, timeBetweenSteps);
+    console.log(l + " " + step);
+    if (step > right-left) {
+        clearTimeout(timer);
+        console.log("timeout cleared");
+    }
+}
 
+function mergeStep(array, left, mid, right) {
+    let tempArr = Array(right-left+1), l = 0, r = mid-left+1;
+    for (let i=0; i<right-left+1; i++) {
+        tempArr[i] = array[i+left];
+    }
+    for (let i=left; i<=right; i++) {
+        if (l<=mid-left && (r>right-left || tempArr[l]<tempArr[r])) {
+            array[i] = tempArr[l];
+            l++;
+        } else {
+            array[i] = tempArr[r];
+            r++;
+        }
+        document.getElementById(`${i}`).style.height = sortingVisualizer.offsetHeight*0.999/COUNT*array[i]+"px";
+    }
+}  

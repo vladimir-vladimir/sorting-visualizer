@@ -1,23 +1,21 @@
-* {
+html, body {
     margin: 0;
     padding: 0;
 }
 
 body {
     overflow: hidden;
+    width: 100vw;
+    height: 100vh;
 }
 
 #sort {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 }
-
-/* #sort > * {
-    align-self: center;
-} */
 
 #sorting-visualizer {
     display: flex;
