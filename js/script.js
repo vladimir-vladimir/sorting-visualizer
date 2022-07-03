@@ -1,7 +1,8 @@
-const COUNT = 100;
+const COUNT = 128;
 const sortingVisualizer = document.querySelector("#sorting-visualizer");
 const numbers = Array.from({length: COUNT}, (_, i) => i + 1);
-let timeBetweenSteps = 200, i, j, l, step;
+let tempNumbers = Array(numbers.length);
+let timeBetweenSteps = 25, i, j, l, lt, rt, step, idx;
 let startPressed = false;
 
 shuffleArray(numbers);
@@ -26,7 +27,7 @@ mergeSortButton.addEventListener("click", () => {
         return;
     }
     startPressed = true;
-    step=1, l=0;
+    step=1, l=0, idx=-1;
     mergeSort(numbers, 0, numbers.length-1);
 });
 document.getElementById("buttons").append(mergeSortButton);
@@ -99,6 +100,7 @@ function bubbleSort(array) {
     }
 }
 
+// Spaghetti code that allows for a smooth transition at each step of merge sort
 function merge(array, left, right) {
     if (l >=right) {
         l=left;
@@ -109,8 +111,29 @@ function merge(array, left, right) {
     }
     let m = (l+step-1>right) ? right:l+step-1;
     let r = (l+2*step-1>right) ? right:l+2*step-1;
-    mergeStep(array, l, m, r);  
-    l += 2*step;
+ 
+    if (idx==-1) {
+        idx=l;
+        lt=l; 
+        rt=m+1;
+        for (let i=l; i<r+1; i++) {
+            tempNumbers[i] = array[i];
+        }
+    }
+    if (idx>r) {
+        idx=-1;
+        l += 2*step;
+    } else {
+        if (lt<=m && (rt>r || tempNumbers[lt]<array[rt])) {
+            array[idx] = tempNumbers[lt];
+            lt++;
+        } else {
+            array[idx] = tempNumbers[rt];
+            rt++;
+        }
+        document.getElementById(`${idx}`).style.height = sortingVisualizer.offsetHeight*0.999/COUNT*array[idx]+"px";
+        idx++;
+    }
 }
 
 function mergeSort(array, left, right) {
@@ -122,18 +145,18 @@ function mergeSort(array, left, right) {
 }
 
 function mergeStep(array, left, mid, right) {
-    let tempArr = Array(right-left+1), l = 0, r = mid-left+1;
-    for (let i=0; i<right-left+1; i++) {
-        tempArr[i] = array[i+left];
+    let tempArr = Array(right-left+1), lt = 0, rt = mid-left+1;
+    for (let it=0; it<right-left+1; it++) {
+        tempArr[it] = array[it+left];
     }
-    for (let i=left; i<=right; i++) {
-        if (l<=mid-left && (r>right-left || tempArr[l]<tempArr[r])) {
-            array[i] = tempArr[l];
-            l++;
+    for (let it=left; it<=right; it++) {
+        if (lt<=mid-left && (rt>right-left || tempArr[lt]<tempArr[rt])) {
+            array[it] = tempArr[lt];
+            lt++;
         } else {
-            array[i] = tempArr[r];
-            r++;
+            array[it] = tempArr[rt];
+            rt++;
         }
-        document.getElementById(`${i}`).style.height = sortingVisualizer.offsetHeight*0.999/COUNT*array[i]+"px";
+        document.getElementById(`${it}`).style.height = sortingVisualizer.offsetHeight*0.999/COUNT*array[it]+"px";
     }
 }  
